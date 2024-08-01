@@ -1,5 +1,5 @@
 # mBusCH55x
-An affordable USB-CDC TinyBasic dev board. <br>
+An affordable USB-CDC TinyBasic dev board, **CH552E/CH554G/CH559T** compatible!<br>
  
 <img src="pic/mBusCH55x_240801.png" width=85%> <br>
 
