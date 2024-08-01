@@ -6,3 +6,6 @@ An affordable USB-CDC TinyBasic dev board, **CH552E/CH554G/CH559T** compatible!<
 
 As of 0801-2024, the list price on LCSC site: <br>
 <img src="pic/CH55xPrice0801.jpg" width=85%> <br>
+
+
+<img src="pic/cdc559-1000.jpg" width=45%> &nmbs; <img src="pic/cdcCMDs.jpg" width=45%> <br>
