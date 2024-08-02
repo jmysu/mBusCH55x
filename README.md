@@ -8,7 +8,7 @@ As of 0801-2024, the list price on LCSC site: <br>
 <img src="pic/CH55xPrice0801.jpg" width=85%> <br>
 
 <br>
-Firmware supported:(**cdcCMDs** CH55x) <br>
+Firmware supported:( **cdcCMDs** CH55x) <br>
 <img src="pic/cdcCMDs.jpg" width=50%> <br>
-Firmware supported:(**TinyBasic cdc559-1000** CH559) <br>
+Firmware supported:( **TinyBasic cdc559-1000** CH559) <br>
 <img align="right" src="pic/cdc559-1000.jpg" width=80%>
