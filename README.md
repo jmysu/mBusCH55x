@@ -15,3 +15,5 @@ As of 0801-2024, the list price on LCSC site: <br>
    TinyBasic cdc559-1000 (CH559) <br>
 <img align="right" src="pic/cdc559-1000.jpg" width=90%> <br>
 
+DIE inside: (CH55x, CH559) <br>
+<img align="left" src="pic/DieCH55x.jpg" width=40%> <img align="right" src="pic/DieCH559.jpg" width=40%><br>
