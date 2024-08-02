@@ -1,0 +1,127 @@
+/*
+ *  cdcTemplate.c
+ *
+ *    CH55x CDC Template w/ xprintf
+ *
+ *    by jimmy.su @ 2024
+ *
+ *    LINKFLAGS: -mmcs51 --iram-size 256 --xram-size 256 --code-size 16384 --out-fmt-ihx --xram-size 768 --xram-loc 256
+
+ *    Checking size .pio\build\CH55x\firmware.hex
+ *    Flash: [==        ]  16.2% (used 2654 bytes from 16384 bytes)
+ *
+ *  
+ *          __   __
+ *    P3.2 -|o\_/ |- 3.3V (connect to GND via 0.1uF)
+ *    P1.4 -|  C  |- 5.0V (connect to USB VBUS, connect to GND via 0.1uF)
+ *    P1.5 -|  H  |- GND  (to USB GND)
+ *    P1.6 -|  5  |- USB D-
+ *    P1.7 -|  5  |- USB D+ (short 3.3v to BOOT)
+ *    Reset-|  2  |- P3.4
+ *    P3.1 -|  G  |- P3.3  
+ *    P3.0 -|_____|- P1.1  
+ * 
+ */
+
+#undef F_CPU
+#define F_CPU 24000000
+#warning "F_CPU 24MHz"
+
+// ===================================================================================
+// Libraries, Definitions and Macros
+// ===================================================================================
+// #include <stdio.h>                        // for printf
+// #include <stdbool.h>
+
+// Libraries
+#include "config.h"   // user configurations
+
+
+#include "delay.h"    // delay functions
+#include "gpio.h"     // GPIO functions
+#include "system.h"   // system functions
+#include "usb_cdc/usb_cdc.h"  // USB-CDC serial functions
+
+#include "ansiColor.h"
+#include "xprintf.h"
+ 
+#ifdef _TITLE_STAMP_
+ #include "myDate.h"
+#endif
+
+// Prototypes for used interrupts
+void USB_interrupt(void);
+void USB_ISR(void) __interrupt(INT_NO_USB) {
+    USB_interrupt();
+}
+
+// ===================================================================================
+// printf
+// ===================================================================================
+// #define printf printf_tiny
+//#define ALWAYS_PRINT_UNSIGNED
+
+#define DBGCMD 1
+
+int putchar(int c) {
+    CDC_write(c & 0xFF);
+    return c;
+}
+/*
+int putchar (int ch)
+{
+  if(ch == '\n') putchar('\r');
+  for(SBUF0 = ch; !TI0; );
+  TI0 = 0;
+  return ch;
+}
+
+int getchar (void)
+{
+  while(!RI0);
+  RI0 = 0;
+  return SBUF0;
+}
+*/
+//__xdata uint8_t buf[32];  //CDC input buffer
+//__xdata uint8_t buf1[32];  //CDC input buffer copy
+//__xdata uint8_t counterParam;
+
+__code uint16_t __at(ROM_CHIP_ID_HX) chid_hx;
+__code uint16_t __at(ROM_CHIP_ID_HI) chid_hi;
+__code uint16_t __at(ROM_CHIP_ID_LO) chid_lo;
+ 
+// ===================================================================================
+// Main Function
+// ===================================================================================
+void main(void) {
+    // Setup
+    CLK_config();  // configure system clock
+    DLY_ms(10);    // wait for clock to settle
+    CDC_init();    // init USB CDC
+    DLY_ms(1000);  // WAIT 1-second
+
+    while (!CDC_ready()) {}  // wait USBCDC ready to write1
+    //DLY_ms(500);
+    //=========================================================================
+    //TIMESTAMP & ID & TITLE  (3241-2337)bytes
+    #ifdef _TITLE_STAMP_
+      PRINTF("\033[H\033[J");                                                             // Clear screen
+      PRINTF("\033[" ANSI_GREEN "m");                                                     // Green
+      PRINTF(__TIMESTAMP__);                                                              // Build timestamp
+      PRINTF("   CH5%2x:%02X-%04X-%04X\n", CHIP_ID, chid_hx & 0x00FF, chid_hi, chid_lo);  // Chip ID
+      PRINTF("\033[" ANSI_YELLOW "m");                                                    // Yellow
+      getMyDate();                                                                        // Get date in number from __DATE__
+      PRINTF("___%s.%02u%02u%02u___\n", "cdcTemplate", _year,_month,_day);                // Project Name
+      PRINTF("\033[0m");                   
+      CDC_flush();
+    #endif                                               // Normal
+    //=========================================================================
+    //PIN_output(P17);
+
+    // Loop
+    while (1) {
+        PIN_toggle(P17);
+        DLY_ms(500);
+    }
+}
