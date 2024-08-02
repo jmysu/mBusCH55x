@@ -18,5 +18,6 @@ As of 0801-2024, the list price on LCSC site: <br>
 <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 
 >What's inside: <br>
-left:CH55x 
-<img align="left" src="pic/DieCH554.jpg" width=40%> right:CH559 <img align="right" src="pic/DieCH559.jpg" width=40%><br>
+left:CH55x right:CH559 <br>
+<img align="left" src="pic/DieCH554.jpg" width=40%>  <img align="right" src="pic/DieCH559.jpg" width=40%><br>
+
