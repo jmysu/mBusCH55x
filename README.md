@@ -9,4 +9,4 @@ As of 0801-2024, the list price on LCSC site: <br>
 
 <br>
 Firmware supported: <br>
-<img src="pic/cdc559-1000.jpg" width=55%><img src="pic/cdcCMDs.jpg" width=30%> <br>
+<img src="pic/cdc559-1000.jpg" width=50%><img src="pic/cdcCMDs.jpg" width=30%><br>
