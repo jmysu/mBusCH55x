@@ -13,5 +13,5 @@ As of 0801-2024, the list price on LCSC site: <br>
    cdcCMDs (CH55x) <br>
 <img src="pic/cdcCMDs.jpg" width=50%> <br>
    TinyBasic cdc559-1000 (CH559) <br>
-<img align="right" src="pic/cdc559-1000.jpg" width=80%> <br>
+<img align="right" src="pic/cdc559-1000.jpg" width=90%> <br>
 
