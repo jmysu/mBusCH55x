@@ -13,5 +13,5 @@
 **CH559** PlatformIO project, MCS-51 model-large 
 [link](https://github.com/jmysu/mBusCH55x/tree/main/firmware/cdcCMDs559.MCS51) <br>
 
-<img src="pic/CH559tCmdTTBasic.gif" width=80%>
+<img src="https://github.com/jmysu/mBusCH55x/blob/main/pic/CH559tCmdTTBasic.gif" width=80%>
  
