@@ -8,7 +8,11 @@
  */
 
 #include "myCmds.h"
-uint8_t cmdBuf[32];  // cmd input buffer
+#ifdef _CH55X_
+_xdata uint8_t cmdBuf[32];  // CH55x
+#else
+ uint8_t cmdBuf[32];  // cmd input buffer
+#endif
 
 typedef struct {
     const char* cmd;
@@ -24,6 +28,7 @@ const cmdDictionary tableCmds[] = {
     {"p1r", "read P1(1~7)", cmdP1R},
     {"eew", "write EE(00~3FF), eew <xx=xx>", cmdEEW},
     {"eer", "read EE", cmdEER},
+    {"neo", "neopixel <index>,<r>,<g>,<b>", cmdNeopixel},
     {"basic", "TinyBasic", cmdBasic},
     /*---------------------------------------------------*/
     {"?", "show this help!", cmdHelp}};
@@ -43,9 +48,83 @@ void cmdHelp(void) {
     for (int i = 0; i < 50; i++) printf("_");
     printf("\n");
 }
+
+//=============================================================================
+//
+void cmdMatch(char* s) {
+    int iCmd;
+    int iCmdCount = sizeof(tableCmds) / sizeof(cmdDictionary);
+    bool bCmdOK = false;
+
+    // Serial.printf("Matching cmd %s:", sToken.c_str());
+    // printf("Matching cmd:%s ",s);
+    for (iCmd = 0; iCmd < iCmdCount; iCmd++) {
+        if (strcmp(s, tableCmds[iCmd].cmd) == 0) {  // compare s with cmds
+            // tableCmds[i].function();
+            bCmdOK = true;
+            break;
+        }
+    }
+    if (!bCmdOK) {
+        // Serial.printf();
+        printf("Err: %s no found!\n", s);  // 8541
+    } else {                               // Found cmd
+        tableCmds[iCmd].function();
+    }
+}
+
+//
+//
+void cmdPrompt(void) {
+    printf("CMD>");
+}
+
+//=============================================================================
+/* cmdParam(char c)
+ *
+ *  copy cmdBuf, search buffer and
+ *  return the parameter at c
+ *
+ */
+//
+#ifdef _CH55X_
+_xdata uint8_t cmdBuf1[32];  // CH55x
+#else
+ uint8_t cmdBuf1[32];  // CH559
+#endif
+
+char* cmdParam(char c) {
+    strcpy(cmdBuf1, cmdBuf);  // copy buf
+
+    char idx;
+    char* token;
+    idx = 0;
+    // printf("cmdParam:%s\n", buf1);
+    //  walk through other tokens
+    token = strtok(cmdBuf1, " =,");
+    while (token != NULL) {
+        // printf ("[%d]:%s\n", idx, token);
+        if (idx == c) break;
+        idx++;
+        token = strtok(NULL, " =,");
+    }
+    // printf("cmdParam%d:%s\n", c, token);
+    return token;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+//
+//
+void cmdBasic(void) {
+    printf("!Type RESET to return!\n");
+    basic();
+}
+
 void cmdReset(void) {
     RST_now();
 }
+
 void cmdBL(void) {
     printf("Jumping to BootLoader!");
     // CDC_flush();
@@ -55,7 +134,7 @@ void cmdBL(void) {
     // BOOT_now();         //Jump
     runBootloaderF400();
 }
-//=============================================================================
+
 /*
 SFR(P1_MOD_OC,	0x92);	// port 1 output mode: 0=push-pull, 1=open-drain
 SFR(P1_DIR_PU,	0x93);	// port 1 direction for push-pull or pullup enable for open-drain
@@ -113,71 +192,6 @@ void cmdP1R(void) {
         printf("%c", P1 & (1 << i) ? '1' : '0');
     }
     printf("\n");
-}
-
-
-
-void cmdMatch(char* s) {
-    int iCmd;
-    int iCmdCount = sizeof(tableCmds) / sizeof(cmdDictionary);
-    bool bCmdOK = false;
-
-    // Serial.printf("Matching cmd %s:", sToken.c_str());
-    // printf("Matching cmd:%s ",s);
-    for (iCmd = 0; iCmd < iCmdCount; iCmd++) {
-        if (strcmp(s, tableCmds[iCmd].cmd) == 0) {  // compare s with cmds
-            // tableCmds[i].function();
-            bCmdOK = true;
-            break;
-        }
-    }
-    if (!bCmdOK) {
-        // Serial.printf();
-        printf("Err: %s no found!\n", s);  // 8541
-    } else {                               // Found cmd
-        tableCmds[iCmd].function();
-    }
-}
-
-void cmdPrompt(void) {
-    printf("CMD>");
-}
-
-void cmdBasic(void) {
-    printf("!Type RESET to return!\n");
-    basic();
-}
-
-//=============================================================================
-/* cmdParam(char c)
- *
- *  copy cmdBuf, search buffer and
- *  return the parameter at c
- *
- */
-//
-#ifdef _CH55X_
-_xdata char cmdBuf1[32];  // CH55x
-#else
-char cmdBuf1[32];  // CH559
-#endif
-char* cmdParam(char c) {
-    strcpy(cmdBuf1, cmdBuf);  // copy buf
-
-    char idx;
-    char* token;
-    idx = 0;
-    // printf("cmdParam:%s\n", buf1);
-    //  walk through other tokens
-    token = strtok(cmdBuf1, " =");
-    while (token != NULL) {
-        // printf ("[%d]:%s\n", idx, token);
-        if (idx == c) break;
-        idx++;
-        token = strtok(NULL, " =");
-    }
-    // printf("cmdParam%d:%s\n", c, token);
-    return token;
 }
 
 /*
@@ -251,4 +265,39 @@ void cmdEEW(void) {
     #endif
 
     printf("CH55x EE[%02X]:%02X\n", addr, val);
+}
+
+//uint8_t LEDdata[3];
+void cmdNeopixel(void) {
+    
+    char index;
+    uint8_t r,g,b;
+
+    index = atoi(cmdParam(1));
+    r = atoi(cmdParam(2));
+    g = atoi(cmdParam(3));
+    b = atoi(cmdParam(4));
+    NEOdata[index][0]=r;
+    NEOdata[index][1]=g;
+    NEOdata[index][2]=b;
+    printf("\n Neo1.7[%d]: %02X|%02X|%02X\n", index,  r,g,b);
+
+    //NEO_init();                 // init NeoPixel
+    pinMode(1, 7, OUTPUT);
+    digitalWrite(1, 7, 0);delayMicroseconds(256); //300ns reset
+    /* test
+    NEO_writeColor(128,127,129);
+    NEO_writeColor(255,254,253);
+    NEO_writeColor(3,2,1);
+
+    delayMicroseconds(256); //latch 300ns
+    NEO_writeColor(1,2,3);
+    delayMicroseconds(256); //latch 300ns
+    */
+    //flush out all NEOdata
+    for (int i=0;i<NEO_COUNT;i++) {
+        NEO_writeColor(NEOdata[i][0],NEOdata[i][1],NEOdata[i][2]);
+        }
+    //END
+    digitalWrite(1, 7, 1);
 }

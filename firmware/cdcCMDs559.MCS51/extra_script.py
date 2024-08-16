@@ -24,3 +24,8 @@ env.Append(
         ]
     )
 print("LINKFLAGS:"+env["LINKFLAGS"])
+
+# In-line command with arguments
+#env.Replace(
+#    UPLOADCMD="executable -arg1 -arg2 $SOURCE"
+#)

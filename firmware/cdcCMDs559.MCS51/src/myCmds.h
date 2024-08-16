@@ -24,6 +24,10 @@
 #include "ansiColor.h"
 #include "ttbasic.h"
 
+//NeoPixel
+//#include "bitbang2812.h"
+#include "neo.h"
+
 extern char cmdBuf[];
 extern void cmdMatch(char *s);
 extern char* cmdParam(char c);
