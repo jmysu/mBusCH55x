@@ -16,4 +16,4 @@
 <img src="https://github.com/jmysu/mBusCH55x/blob/main/pic/CH559tCmdTTBasic.gif" width=80%>
 
 **CH559 cdcCMDs** added neopixel cmd <br>
-<img src="https://github.com/jmysu/mBusCH55x/blob/main/pic/cdcCMDsNeo.jpg" width=80%> <br>
+<img src="https://github.com/jmysu/mBusCH55x/blob/main/firmware/cdcCMDsNeo.jpg" width=80%> <br>
