@@ -12,6 +12,8 @@
 ## Project cdcCMD559: <br>
 **CH559** PlatformIO project, MCS-51 model-large 
 [link](https://github.com/jmysu/mBusCH55x/tree/main/firmware/cdcCMDs559.MCS51) <br>
-
+<br>
 <img src="https://github.com/jmysu/mBusCH55x/blob/main/pic/CH559tCmdTTBasic.gif" width=80%>
- 
+
+**CH559 cdcCMDs** added neopixel cmd <br>
+<img src="https://github.com/jmysu/mBusCH55x/blob/main/pic/cdcCMDsNeo" width=80%> <br>
